@@ -148,6 +148,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
+    # 添加 git 配置
+    - name: Configure git
+      run: |
+        git config user.email "test@example.com"
+        git config user.name "Test User"
+
     - name: Create test files
       run: |
         # Create client files
@@ -171,13 +178,15 @@ jobs:
         mkdir -p .github/workflows
         touch .github/workflows/build-xmu-ci.yml
 
-        # Add all files to git
+        # Stage and commit all files
         git add .
+        git commit -m "Add test files"
 
     - uses: ./
       id: filter
       with:
-        base: HEAD
+        list-files: shell  # 添加这个选项来输出匹配的文件
+        base: HEAD^  # 修改为对比上一次提交
         filters: |
           client:
             pattern:
